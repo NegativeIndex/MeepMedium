@@ -20,6 +20,11 @@ MeepMedium.save_refidx module
 .. automodule:: MeepMedium.save_refidx
          :members:
 
+MeepMedium.ref module
+----------------------------------------------------------------
+.. automodule:: MeepMedium.ref
+         :members:
+
 Indices and tables
 ==================
 
