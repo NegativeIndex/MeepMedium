@@ -117,3 +117,56 @@ In4p2_susc = [mp.DrudeSusceptibility(frequency=In4p2_frq0,
 In4p2 = mp.Medium(epsilon=1.000, E_susceptibilities=In4p2_susc, 
                valid_freq_range=metal_range)
 
+############################
+# high-loss Pd
+############################
+# palladium (Pd)
+# default unit length is 1 um
+def lossy_Pd(r):
+    """Give a input r between 0 and 1, the function will return a modified
+    Pd with lower reflection. The absorption coefficient is lower
+    too. We have to use a thicker layer the prevent any transmission.
+
+    """
+    um_scale = 1.0
+
+    # conversion factor for eV to 1/um [=1/hc]
+    eV_um_scale = um_scale/1.23984193
+    metal_range = mp.FreqRange(min=um_scale/12.4, max=um_scale/0.2)
+
+    Pd_plasma_frq = 9.72*eV_um_scale
+    Pd_f0 = 0.330
+    Pd_frq0 = 1e-10
+    Pd_gam0 = 0.008*eV_um_scale
+    Pd_sig0 = Pd_f0*Pd_plasma_frq**2/Pd_frq0**2
+    Pd_f1 = 0.649
+    Pd_frq1 = 0.336*eV_um_scale      # 3.690 um
+    Pd_gam1 = 2.950*eV_um_scale
+    Pd_sig1 = Pd_f1*Pd_plasma_frq**2/Pd_frq1**2
+    Pd_f2 = 0.121
+    Pd_frq2 = 0.501*eV_um_scale      # 2.475 um
+    Pd_gam2 = 0.555*eV_um_scale
+    Pd_sig2 = Pd_f2*Pd_plasma_frq**2/Pd_frq2**2
+    Pd_f3 = 0.638
+    Pd_frq3 = 1.659*eV_um_scale      # 0.747 um
+    Pd_gam3 = 4.621*eV_um_scale
+    Pd_sig3 = Pd_f3*Pd_plasma_frq**2/Pd_frq3**2
+    Pd_f4 = 0.453
+    Pd_frq4 = 5.715*eV_um_scale      # 0.217 um
+    Pd_gam4 = 3.236*eV_um_scale
+    Pd_sig4 = Pd_f4*Pd_plasma_frq**2/Pd_frq4**2
+    Pd_susc = [mp.DrudeSusceptibility(frequency=Pd_frq0, 
+                                      gamma=Pd_gam0, sigma=Pd_sig0*r),
+               mp.LorentzianSusceptibility(frequency=Pd_frq1, 
+                                           gamma=Pd_gam1, sigma=Pd_sig1*r),
+               mp.LorentzianSusceptibility(frequency=Pd_frq2, 
+                                           gamma=Pd_gam2, sigma=Pd_sig2*r),
+               mp.LorentzianSusceptibility(frequency=Pd_frq3, 
+                                           gamma=Pd_gam3, sigma=Pd_sig3*r),
+               mp.LorentzianSusceptibility(frequency=Pd_frq4, 
+                                           gamma=Pd_gam4, sigma=Pd_sig4*r)]
+
+    Pd = mp.Medium(epsilon=1.0, E_susceptibilities=Pd_susc, 
+                   valid_freq_range=metal_range)
+
+    return Pd
